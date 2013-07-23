@@ -1,0 +1,158 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.tiviz</groupId>
+	<artifactId>tiviz-charts-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Tiviz-Charts parent project</name>
+	<description>Tiviz-Charts parent project</description>
+	<modules>
+		<module>tiviz-charts</module>
+		<module>tiviz-charts-demo</module>
+	</modules>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.6</java.version>
+		<gwt.version>2.5.1</gwt.version>
+		<gwt-d3.version>0.0.14-SNAPSHOT</gwt-d3.version>
+		<guava.version>14.0.1</guava.version>
+		<powermock.version>1.5</powermock.version>
+		<mockito.version>1.9.5</mockito.version>
+		<assertj.version>1.1.0</assertj.version>
+		<javax-validation.version>1.0.0.GA</javax-validation.version>
+		<junit.version>4.11</junit.version>
+
+	</properties>
+
+
+	<!-- this is for the release plugin -->
+	<!-- <scm> -->
+	<!-- <url>http://github.com/gwtd3/gwt-d3</url> -->
+	<!-- <connection>scm:git:ssh://github.com/gwtd3/gwt-d3.git</connection> -->
+	<!-- <developerConnection>scm:git:ssh://git@github.com/gwtd3/gwt-d3.git</developerConnection> -->
+	<!-- <tag>HEAD</tag> -->
+	<!-- </scm> -->
+
+
+	<build>
+		<!-- allow deploying on cloudbees via webdav -->
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.4</version>
+			</extension>
+		</extensions>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>gwt-maven-plugin</artifactId>
+										<versionRange>[${gwt.version},)</versionRange>
+										<goals>
+											<goal>i18n</goal>
+											<goal>generateAsync</goal>
+											<goal>resources</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+											<runOnConfiguration>true</runOnConfiguration>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+				</configuration>
+			</plugin>
+			<!-- No License for the moment -->
+			<!-- <plugin> -->
+			<!-- <groupId>com.mycila.maven-license-plugin</groupId> -->
+			<!-- <artifactId>maven-license-plugin</artifactId> -->
+			<!-- <configuration> -->
+			<!-- <header>LICENSE</header> -->
+			<!-- <encoding>UTF-8</encoding> -->
+			<!-- <strictCheck>true</strictCheck> -->
+			<!-- </configuration> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <goals> -->
+			<!-- <goal>check</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
+		</plugins>
+	</build>
+
+	<!-- Deploy releases and snapshots to the CloudBees maven repositories -->
+	<!-- <distributionManagement> -->
+	<!-- <repository> -->
+	<!-- <id>gwt-d3-cloudbees-release-repository</id> -->
+	<!-- <url>dav:https://repository-gwt-d3.forge.cloudbees.com/release/</url> -->
+	<!-- </repository> -->
+	<!-- </distributionManagement> -->
+
+	<repositories>
+		<repository>
+			<id>gwt-d3-cloudbees-release-repository-repo</id>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<name>CloudBees Release Repository (for gwt-d3)</name>
+			<url>http://repository-gwt-d3.forge.cloudbees.com/release/</url>
+		</repository>
+		<repository>
+			<id>gwt-d3-cloudbees-snapshot-repository-repo</id>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<name>CloudBees Snapshot Repository (for gwt-d3)</name>
+			<url>http://repository-gwt-d3.forge.cloudbees.com/snapshot/</url>
+		</repository>
+	</repositories>
+
+</project>

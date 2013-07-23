@@ -1,0 +1,49 @@
+@external .major, .minor, .tick;
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x path {
+  display: none;
+}
+
+.y path {
+}
+
+.y text{
+	text-anchor: end;
+}
+
+/* default linerenderer style */
+path.serie{
+	fill:none;	
+	stroke: steelblue;
+	stroke-width: 1px;
+}
+
+rect.serie{
+	fill:steelblue;	
+}
+
+.label{
+	
+}
+
+.svg{
+	
+}
+
+.major{
+}
+
+.minor{
+}
+
+.tick{
+}
+
+.serie{
+}

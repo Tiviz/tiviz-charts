@@ -122,13 +122,19 @@
 		</plugins>
 	</build>
 
-	<!-- Deploy releases and snapshots to the CloudBees maven repositories -->
-	<!-- <distributionManagement> -->
-	<!-- <repository> -->
-	<!-- <id>gwt-d3-cloudbees-release-repository</id> -->
-	<!-- <url>dav:https://repository-gwt-d3.forge.cloudbees.com/release/</url> -->
-	<!-- </repository> -->
-	<!-- </distributionManagement> -->
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<name>Mediametrie Releases Repository</name>
+			<url>http://repo.mediametrie.fr/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<uniqueVersion>false</uniqueVersion>
+			<name>Mediametrie Snapshots Repository</name>
+			<url>http://repo.mediametrie.fr/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<repositories>
 		<repository>

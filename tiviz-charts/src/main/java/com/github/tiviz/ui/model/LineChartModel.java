@@ -17,18 +17,19 @@ import com.github.tiviz.ui.event.SerieRemovedEvent.SerieRemovedHandler;
 import com.github.tiviz.ui.event.SerieRemovedEvent.SerieRemovedHasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class LineChartModel<S extends Scale<S>> extends BaseChartModel<S> implements SerieAddedHasHandlers,
+public class LineChartModel<X extends Scale<X>, Y extends Scale<Y>> extends BaseChartModel<X, Y> implements
+        SerieAddedHasHandlers,
         SerieRemovedHasHandlers {
 
     private final Map<String, Serie<?>> series = new HashMap<String, Serie<?>>();
 
-    public LineChartModel(final AxisModel<S> xModel, final AxisModel<S> yModel) {
+    public LineChartModel(final AxisModel<X> xModel, final AxisModel<Y> yModel) {
         super(xModel, yModel);
     }
 
-    public static <Y extends Scale<Y>> LineChartModel<Y> create(final AxisModel<Y> xModel,
+    public static <X extends Scale<X>, Y extends Scale<Y>> LineChartModel<X, Y> create(final AxisModel<X> xModel,
             final AxisModel<Y> yModel) {
-        return new LineChartModel<Y>(xModel, yModel);
+        return new LineChartModel<X, Y>(xModel, yModel);
     }
 
     // =========== series methods ================
@@ -78,7 +79,7 @@ public class LineChartModel<S extends Scale<S>> extends BaseChartModel<S> implem
         return series(id);
     }
 
-    public BaseChartModel<S> removeSerie(final String id) {
+    public BaseChartModel<X, Y> removeSerie(final String id) {
         Serie<?> serie = this.series.remove(id);
         if (serie != null) {
             fireEvent(new SerieRemovedEvent(serie));

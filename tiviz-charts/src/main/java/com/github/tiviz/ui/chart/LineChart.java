@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.gwtd3.api.scales.LinearScale;
 import com.github.tiviz.ui.chart.renderer.BarRenderer;
 import com.github.tiviz.ui.chart.renderer.LineRenderer;
 import com.github.tiviz.ui.chart.renderer.Renderer;
@@ -54,7 +53,7 @@ public class LineChart extends BaseChart implements SerieAddedHandler, SerieRemo
     /**
      * The model defining this chart
      */
-    private final LineChartModel<LinearScale> model;
+    private final LineChartModel<?, ?> model;
 
     private final LineChart.Styles styles;
 
@@ -103,11 +102,11 @@ public class LineChart extends BaseChart implements SerieAddedHandler, SerieRemo
         String serie();
     }
 
-    public LineChart(final LineChartModel<LinearScale> model) {
+    public LineChart(final LineChartModel<?, ?> model) {
         this(model, createDefaultResources());
     }
 
-    public LineChart(final LineChartModel<LinearScale> model, final Resources resources) {
+    public LineChart(final LineChartModel<?, ?> model, final Resources resources) {
         super(model, resources);
         // getElement().setAttribute("viewBox", "0 0 500 400");
         styles = resources.chartStyles();
@@ -216,7 +215,7 @@ public class LineChart extends BaseChart implements SerieAddedHandler, SerieRemo
      * 
      * @return the model
      */
-    public LineChartModel<LinearScale> model() {
+    public LineChartModel<?, ?> model() {
         return model;
     }
 

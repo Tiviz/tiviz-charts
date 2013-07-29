@@ -6,6 +6,7 @@ package com.github.tiviz.ui.model;
 import com.github.gwtd3.api.D3;
 import com.github.gwtd3.api.scales.LinearScale;
 import com.github.gwtd3.api.scales.Scale;
+import com.github.gwtd3.api.time.TimeScale;
 import com.github.tiviz.ui.event.RangeChangeEvent;
 import com.github.tiviz.ui.event.RangeChangeEvent.RangeChangeHandler;
 import com.github.tiviz.ui.event.RangeChangeEvent.RangeChangeHasHandlers;
@@ -45,10 +46,19 @@ public class AxisModel<S extends Scale<S>> implements RangeChangeHasHandlers {
     private final HandlerManager manager = new HandlerManager(this);
 
     /**
+     * Create a new AxisModel based on a {@link LinearScale}.
      * @return a new model driven by a linear scale.
      */
     public static AxisModel<LinearScale> createLinear() {
         return new AxisModel<LinearScale>(D3.scale.linear());
+    }
+
+    /**
+     * Create a new AxisModel based on a {@link TimeScale}.
+     * @return the new axis model
+     */
+    public static AxisModel<TimeScale> createTimeAxis() {
+        return new AxisModel<TimeScale>(D3.time().scale());
     }
 
     public AxisModel(final S scale) {

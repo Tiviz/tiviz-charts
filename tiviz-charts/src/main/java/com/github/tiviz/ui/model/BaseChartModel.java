@@ -18,14 +18,14 @@ import com.google.gwt.event.shared.HasHandlers;
  * 
  * @param <T>
  */
-public class BaseChartModel<S extends Scale<S>> implements HasHandlers {
+public class BaseChartModel<X extends Scale<X>, Y extends Scale<Y>> implements HasHandlers {
 
-    private final AxisModel<S> xModel;
-    private final AxisModel<S> yModel;
+    private final AxisModel<X> xModel;
+    private final AxisModel<Y> yModel;
 
     protected final HandlerManager eventManager = new HandlerManager(this);
 
-    public BaseChartModel(final AxisModel<S> xModel, final AxisModel<S> yModel) {
+    public BaseChartModel(final AxisModel<X> xModel, final AxisModel<Y> yModel) {
         super();
         this.xModel = xModel;
         this.yModel = yModel;
@@ -38,7 +38,7 @@ public class BaseChartModel<S extends Scale<S>> implements HasHandlers {
      * 
      * @return the model
      */
-    public AxisModel<S> xModel() {
+    public AxisModel<X> xModel() {
         return xModel;
     }
 
@@ -47,7 +47,7 @@ public class BaseChartModel<S extends Scale<S>> implements HasHandlers {
      * 
      * @return the model
      */
-    public AxisModel<S> yModel() {
+    public AxisModel<Y> yModel() {
         return yModel;
     }
 

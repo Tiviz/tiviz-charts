@@ -28,179 +28,185 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public abstract class ComponentSelector extends SVGDocumentContainer implements HasValue<Double> {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final int rectangeWidth = 20;
+    private static final int rectangeWidth = 20;
 
-	protected Selection rectangleSelector;
-	// protected Selection text;
-	// protected Selection selectedValueText;
+    protected Selection rectangleSelector;
+    // protected Selection text;
+    // protected Selection selectedValueText;
 
-	private int steps;
-	protected Selection componentSymbol;
-	private Symbol symbol;
+    private int steps;
+    protected Selection componentSymbol;
+    private Symbol symbol;
 
-	private boolean dragging;
+    private boolean dragging;
 
-	protected double value;
+    protected double value;
 
-	private HandlerRegistration registration;
+    private HandlerRegistration registration;
 
-	/**
+    /**
 	 * 
 	 */
-	public ComponentSelector() {
-		super();
-		getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		getElement().getStyle().setProperty("userSelect", "none");
-		getElement().getStyle().setProperty("webkitUserSelect", "none");
-		setPixelSize(60, 300);
-		// FIXMEtransform().translate(0, 10);
-		init();
-	}
+    public ComponentSelector() {
+        super();
+        getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+        getElement().getStyle().setProperty("userSelect", "none");
+        getElement().getStyle().setProperty("webkitUserSelect", "none");
+        setPixelSize(60, 300);
+        // FIXMEtransform().translate(0, 10);
+        init();
+    }
 
-	private void init() {
-		symbol = D3.svg().symbol().type(Type.TRIANGLE_UP);
+    private void init() {
+        symbol = D3.svg().symbol().type(Type.TRIANGLE_UP);
 
-		rectangleSelector = select().append("rect")
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("width", ComponentSelector.rectangeWidth)
-				.attr("height", 250);
+        rectangleSelector = select().append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", ComponentSelector.rectangeWidth)
+                .attr("height", 250);
 
-		rectangleSelector.node().getStyle().setCursor(Cursor.POINTER);
-		rectangleSelector.node().getStyle().setProperty("userSelect", "none");
-		rectangleSelector.node().getStyle().setProperty("webkitUserSelect", "none");
+        rectangleSelector.node().getStyle().setCursor(Cursor.POINTER);
+        rectangleSelector.node().getStyle().setProperty("userSelect", "none");
+        rectangleSelector.node().getStyle().setProperty("webkitUserSelect", "none");
 
-		componentSymbol = select().append("path")
-				.attr("fill", "blue")
-				.attr("transform", "translate(" + (Integer.parseInt(rectangleSelector.attr("width")) + 4) + "," + 0 + ") rotate(-90)")
-				.attr("d", symbol);
+        componentSymbol =
+                select().append("path")
+                        .attr("fill", "blue")
+                        .attr("transform",
+                                "translate(" + (Integer.parseInt(rectangleSelector.attr("width")) + 4) + "," + 0
+                                        + ") rotate(-90)")
+                        .attr("d", symbol);
 
-		Drag dragBehavior = D3.behavior().drag().on(DragEventType.drag, new DatumFunction<Void>() {
-			@Override
-			public Void apply(final Element context, final Value d, final int index) {
-				updateColorFromMouse(rectangleSelector);
-				return null;
-			}
-		});
-		rectangleSelector.call(dragBehavior);
-		componentSymbol.call(dragBehavior);
-		componentSymbol.node().getStyle().setCursor(Cursor.POINTER);
-		componentSymbol.node().getStyle().setCursor(Cursor.POINTER);
+        Drag dragBehavior = D3.behavior().drag().on(DragEventType.DRAG, new DatumFunction<Void>() {
+            @Override
+            public Void apply(final Element context, final Value d, final int index) {
+                updateColorFromMouse(rectangleSelector);
+                return null;
+            }
+        });
+        rectangleSelector.call(dragBehavior);
+        componentSymbol.call(dragBehavior);
+        componentSymbol.node().getStyle().setCursor(Cursor.POINTER);
+        componentSymbol.node().getStyle().setCursor(Cursor.POINTER);
 
-		createGradient(getGradientSteps());
-	}
+        createGradient(getGradientSteps());
+    }
 
-	/**
-	 * @return
-	 */
-	protected abstract int getGradientSteps();
+    /**
+     * @return
+     */
+    protected abstract int getGradientSteps();
 
-	/**
-	 * @return
-	 */
-	protected abstract String getSelectedValueText();
+    /**
+     * @return
+     */
+    protected abstract String getSelectedValueText();
 
-	/**
-	 * @return
-	 */
-	protected double yToValue(final double y) {
-		String attr = rectangleSelector.attr("height");
-		int height = Integer.parseInt(attr);
-		return ((getComponentMax() * y) / height);
-	}
+    /**
+     * @return
+     */
+    protected double yToValue(final double y) {
+        String attr = rectangleSelector.attr("height");
+        int height = Integer.parseInt(attr);
+        return ((getComponentMax() * y) / height);
+    }
 
-	/**
-	 * @return the maximum value of the value
-	 */
-	protected abstract double getComponentMax();
+    /**
+     * @return the maximum value of the value
+     */
+    protected abstract double getComponentMax();
 
-	private void createGradient(final int steps) {
-		this.steps = steps;
-		// text.text("number of steps: " + steps);
-		String name = this.getClass().getName();
-		name = name.substring(name.lastIndexOf('.') + 1);
-		GradientBuilder builder = GradientBuilder.createVerticalLinearGradient(this, name + steps);
-		for (int i = 0; i <= steps; i += 1) {
-			builder.appendStop(i * (100 / steps), createColor(i * (getComponentMax() / steps)));
-		}
+    private void createGradient(final int steps) {
+        this.steps = steps;
+        // text.text("number of steps: " + steps);
+        String name = this.getClass().getName();
+        name = name.substring(name.lastIndexOf('.') + 1);
+        GradientBuilder builder = GradientBuilder.createVerticalLinearGradient(this, name + steps);
+        for (int i = 0; i <= steps; i += 1) {
+            builder.appendStop(i * (100 / steps), createColor(i * (getComponentMax() / steps)));
+        }
 
-		rectangleSelector.attr("fill", builder.toFillUrl());
-	}
+        rectangleSelector.attr("fill", builder.toFillUrl());
+    }
 
-	/**
-	 * @param i
-	 * @return
-	 */
-	protected abstract Color createColor(double value);
+    /**
+     * @param i
+     * @return
+     */
+    protected abstract Color createColor(double value);
 
-	private void position(final double y) {
+    private void position(final double y) {
 
-		componentSymbol
-				.attr("transform", "translate(" + (Integer.parseInt(rectangleSelector.attr("width")) + 4) + "," + y + ") rotate(-90)");
+        componentSymbol
+                .attr("transform", "translate(" + (Integer.parseInt(rectangleSelector.attr("width")) + 4) + "," + y
+                        + ") rotate(-90)");
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.TakesValue#getValue()
+     */
+    @Override
+    public Double getValue() {
+        return value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.TakesValue#setValue(java.lang.Object)
+     */
+    @Override
+    public void setValue(final Double value) {
+        setValue(value, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object, boolean)
+     */
+    @Override
+    public void setValue(final Double value, final boolean fireEvents) {
+        double oldValue = this.value;
+        this.value = value;
+        // selectedValueText.text(getSelectedValueText());
+        componentSymbol.attr("fill", createColor(value.doubleValue()).toString());
+        if (fireEvents) {
+            ValueChangeEvent.fireIfNotEqual(this, oldValue, value);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.logical.shared.HasValueChangeHandlers#addValueChangeHandler(com.google.gwt.event.logical
+     * .shared.ValueChangeHandler)
+     */
+    @Override
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Double> handler) {
+        return this.addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    /**
 	 * 
-	 * @see com.google.gwt.user.client.TakesValue#getValue()
 	 */
-	@Override
-	public Double getValue() {
-		return value;
-	}
+    protected void updateGradient() {
+        createGradient(steps);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.TakesValue#setValue(java.lang.Object)
-	 */
-	@Override
-	public void setValue(final Double value) {
-		setValue(value, false);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object, boolean)
-	 */
-	@Override
-	public void setValue(final Double value, final boolean fireEvents) {
-		double oldValue = this.value;
-		this.value = value;
-		// selectedValueText.text(getSelectedValueText());
-		componentSymbol.attr("fill", createColor(value.doubleValue()).toString());
-		if (fireEvents) {
-			ValueChangeEvent.fireIfNotEqual(this, oldValue, value);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.event.logical.shared.HasValueChangeHandlers#addValueChangeHandler(com.google.gwt.event.logical.shared.ValueChangeHandler)
-	 */
-	@Override
-	public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Double> handler) {
-		return this.addHandler(handler, ValueChangeEvent.getType());
-	}
-
-	/**
-	 * 
-	 */
-	protected void updateGradient() {
-		createGradient(steps);
-	}
-
-	private void updateColorFromMouse(final Selection selection) {
-		double mouseY = D3.mouseY(selection.node());
-		double value = yToValue(mouseY);
-		setValue(value, true);
-		position(mouseY);
-	}
+    private void updateColorFromMouse(final Selection selection) {
+        double mouseY = D3.mouseY(selection.node());
+        double value = yToValue(mouseY);
+        setValue(value, true);
+        position(mouseY);
+    }
 
 }

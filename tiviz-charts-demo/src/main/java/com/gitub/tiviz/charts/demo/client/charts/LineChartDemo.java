@@ -29,15 +29,13 @@
 package com.gitub.tiviz.charts.demo.client.charts;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.annotation.Nullable;
 
 import com.github.gwtd3.api.D3;
 import com.github.gwtd3.api.arrays.Array;
-import com.github.gwtd3.api.core.Value;
-import com.github.gwtd3.api.functions.DatumFunction;
 import com.github.gwtd3.api.scales.LinearScale;
+import com.github.gwtd3.api.time.TimeScale;
 import com.github.tiviz.ui.Slider;
 import com.github.tiviz.ui.chart.LineChart;
 import com.github.tiviz.ui.event.RangeChangeEvent;
@@ -54,9 +52,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Range;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -111,16 +107,16 @@ public class LineChartDemo extends Composite implements DemoCase {
 
     private void createChart() {
 
-        LineChartModel<LinearScale> model =
-                new LineChartModel<LinearScale>(AxisModel.createLinear(), AxisModel.createLinear());
+        LineChartModel<TimeScale, LinearScale> model =
+                new LineChartModel<TimeScale, LinearScale>(AxisModel.createTimeAxis(), AxisModel.createLinear());
         this.lineChart = new LineChart(model);
         // configure
-        lineChart.xAxis().formatter(new DatumFunction<String>() {
-            @Override
-            public String apply(final Element context, final Value d, final int index) {
-                return DateTimeFormat.getShortDateTimeFormat().format(new Date((long) d.asDouble()));
-            }
-        });
+        // lineChart.xAxis().formatter(new DatumFunction<String>() {
+        // @Override
+        // public String apply(final Element context, final Value d, final int index) {
+        // return DateTimeFormat.getShortDateTimeFormat().format(new Date((long) d.asDouble()));
+        // }
+        // });
 
     }
 

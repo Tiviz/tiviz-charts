@@ -3,7 +3,7 @@ package com.github.tiviz.ui.chart;
 import java.util.Arrays;
 
 import com.github.gwtd3.api.core.Selection;
-import com.github.gwtd3.api.scales.LinearScale;
+import com.github.gwtd3.api.scales.ContinuousQuantitativeScale;
 import com.github.gwtd3.api.scales.Scale;
 import com.github.gwtd3.api.svg.Axis.Orientation;
 import com.github.tiviz.ui.data.DefaultSelectionUpdater;
@@ -20,7 +20,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Random;
 
 /**
- * A base class for a chart with one horizontal axis and one vertical axis,
+ * A base class for a chart with a horizontal axis and a vertical axis,
  * and a data region.
  * <p>
  * 
@@ -33,9 +33,9 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
     protected static final int DEFAULT_LEFT_POSITION = 35;
     protected static final int DEFAULT_RIGHT_POSITION = 15;
 
-    protected final AxisModel<LinearScale> xModel;
+    protected final AxisModel<? extends Scale<?>> xModel;
 
-    protected final AxisModel<LinearScale> yModel;
+    protected final AxisModel<? extends Scale<?>> yModel;
 
     // ==== children =========
     protected GContainer g;
@@ -49,7 +49,7 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
     /**
      * Support for x or y sliding
      */
-    private final DragSupport dragSupport = new DragSupport(this.xModel);
+    private final DragSupport dragSupport;
     /**
      *  
      */
@@ -72,6 +72,9 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
         }
 
         public Options enableXNavigation(final boolean enable) {
+            if (dragSupport == null) {
+                return this;
+            }
             if (enable) {
                 chart.dragSupport.enable();
             }
@@ -116,11 +119,12 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
         String x();
     }
 
-    public BaseChart(final BaseChartModel<LinearScale> model) {
+    public BaseChart(final BaseChartModel<?, ?> model) {
         this(model, (Resources) GWT.create(Resources.class));
     }
 
-    public BaseChart(final BaseChartModel<LinearScale> model, final Resources resources) {
+    @SuppressWarnings("unchecked")
+    public BaseChart(final BaseChartModel<?, ?> model, final Resources resources) {
         super(resources);
 
         xModel = model.xModel();
@@ -132,6 +136,14 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
 
         dataRegionClipPath = new ClipPath("clip" + Random.nextInt(100000));
 
+        // drag support is available only for 'reversible' scales
+        if (xModel.scale() instanceof ContinuousQuantitativeScale<?>) {
+            dragSupport = new DragSupport((AxisModel<? extends ContinuousQuantitativeScale<?>>) this.xModel);
+        }
+        else {
+            dragSupport = null;
+        }
+
         createChildren();
     }
 
@@ -142,7 +154,9 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
         initModel();
 
         // register x drag interaction
-        dragSupport.registerListeners(select()).enable();
+        if (dragSupport != null) {
+            dragSupport.registerListeners(select()).enable();
+        }
     }
 
     protected void initModel() {
@@ -159,6 +173,7 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
     /**
      * Create the g container, and the axis components.
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void createChildren() {
         // create G container
         g = new GContainer();
@@ -166,7 +181,7 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
         g.transform().translate(DEFAULT_LEFT_POSITION, DEFAULT_TOP_POSITION);
 
         // X AXIS
-        xAxis = new ChartAxis<LinearScale>(xModel, Orientation.BOTTOM);
+        xAxis = new ChartAxis(xModel, Orientation.BOTTOM);
         // FIXME
         // xAxis.setPixelSize(0, chartWidth());
         xAxis.addStyleName(styles.x());
@@ -179,7 +194,7 @@ public class BaseChart extends SVGDocumentContainer implements ChartContext {
         // FIXME
         // yAxis.scale().range(chartHeight(), 0);
         // tickSize(6, 4, 2).
-        yAxis = new ChartAxis<LinearScale>(yModel, Orientation.LEFT);
+        yAxis = new ChartAxis(yModel, Orientation.LEFT);
 
         yAxis.generator().ticks(4);// .tickSubdivide(1).tickSize(12, 6, 3);
         // append the axis to the svg

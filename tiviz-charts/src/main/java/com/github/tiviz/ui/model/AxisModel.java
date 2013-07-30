@@ -42,9 +42,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  */
 public class AxisModel<S extends Scale<S>> implements RangeChangeHasHandlers {
 
-    private final S scale;
-    private final HandlerManager manager = new HandlerManager(this);
-
+    // ============== static factory ==========================
     /**
      * Create a new AxisModel based on a {@link LinearScale}.
      * @return a new model driven by a linear scale.
@@ -60,6 +58,9 @@ public class AxisModel<S extends Scale<S>> implements RangeChangeHasHandlers {
     public static AxisModel<TimeScale> createTimeAxis() {
         return new AxisModel<TimeScale>(D3.time().scale());
     }
+
+    private final S scale;
+    private final HandlerManager manager = new HandlerManager(this);
 
     public AxisModel(final S scale) {
         super();

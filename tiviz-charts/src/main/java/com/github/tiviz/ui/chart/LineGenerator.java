@@ -54,7 +54,6 @@ public class LineGenerator<T> {
                     @Override
                     public Double apply(final Element context, final Value d, final int index) {
                         int x = (int) builder.x(d.<T> as());
-                        // System.out.println(x);
                         return (double) x;
                     }
                 })
@@ -63,7 +62,6 @@ public class LineGenerator<T> {
                     @Override
                     public Double apply(final Element context, final Value d, final int index) {
                         int y = (int) builder.y(d.<T> as());
-                        // System.out.println(y);
                         return (double) y;
                     }
                 })
@@ -71,12 +69,7 @@ public class LineGenerator<T> {
                     @Override
                     public Boolean apply(final Element context, final Value d, final int index) {
                         T value = d.<T> as();
-                        // if (true) {
-                        // return true;
-                        // }
-                        boolean filtered = filter == null ? true : filter.accept(value);
-                        GWT.log("value " + value + " filter resulted:" + filtered);
-                        return filtered;
+                        return filter == null ? true : filter.accept(value);
                     }
                 }
                 );

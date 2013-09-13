@@ -10,7 +10,6 @@ import com.github.gwtd3.api.svg.Line;
 import com.github.gwtd3.api.svg.Line.InterpolationMode;
 import com.github.tiviz.ui.model.DomainFilter;
 import com.github.tiviz.ui.model.PointBuilder;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 
 /**
@@ -48,7 +47,7 @@ public class LineGenerator<T> {
     }
 
     protected void setup() {
-        generator = D3.svg().line().interpolate(InterpolationMode.BASIS)
+        generator = D3.svg().line().interpolate(InterpolationMode.STEP_AFTER)
                 // convert the domain object to a pixel distance
                 .x(new DatumFunction<Double>() {
                     @Override
